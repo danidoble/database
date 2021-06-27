@@ -5,13 +5,23 @@
 
 namespace Danidoble\Database;
 
+use Danidoble\Database\Interfaces\DObject as IDObject;
+
 /**
  * Class DObject
  * @package Danidoble\Database
  */
-class DObject
+class DObject implements IDObject
 {
     public $items;
+
+    /**
+     * DObject constructor.
+     */
+    public function __construct()
+    {
+
+    }
 
     /**
      * @return string
@@ -26,14 +36,13 @@ class DObject
      */
     public function __invoke(): DObject
     {
-        //$this->__credits_creator__ = "danidoble";
         return $this;
     }
 
     /**
      * @param $items
      */
-    public function associatively($items)
+    public function assoc($items)
     {
         if (is_array($items) || is_object($items)) {
             unset ($this->items);
@@ -51,7 +60,6 @@ class DObject
     public function fetch($items_arr)
     {
         $items_obj = [];
-
         foreach ($items_arr as $item_arr) {
             $nDObject = new DObject();
             if (is_array($item_arr) || is_object($items_arr)) {
@@ -59,10 +67,10 @@ class DObject
                 foreach ($item_arr as $key => $val) {
                     $obj[$key] = $val;
                 }
-                $nDObject->associatively($obj);
+                $nDObject->assoc($obj);
                 $items_obj[] = $nDObject;
             } else {
-                $nDObject->associatively($items_arr);
+                $nDObject->assoc($items_arr);
                 $items_obj = $nDObject;
             }
         }

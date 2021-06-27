@@ -2,6 +2,7 @@
 /*
  * Created by  (c)danidoble 2021.
  */
+
 namespace Danidoble\Database;
 
 use Danidoble\Database\Interfaces\Parser as IParser;
@@ -9,7 +10,6 @@ use Danidoble\Database\Interfaces\Parser as IParser;
 
 class Parser implements IParser
 {
-
     /**
      * @param array $arr
      * @return string
@@ -41,12 +41,17 @@ class Parser implements IParser
                 if (trim($wheres) !== "") {
                     $wheres .= " and ";
                 }
-                $binding = "dd_bound_".$key;
-                $this->connection->db_bindings[] = [
-                    $binding=>$where[2],
-                ];
+                if(!$where[3]) {
+                    $binding = "dd_bound_" . $key;
+                    $this->connection->db_bindings[] = [
+                        $binding => $where[2],
+                    ];
 
-                $wheres .= $where[0] . " " . $where[1] . " :" . $binding;
+                    $wheres .= $where[0] . " " . $where[1] . " :" . $binding;
+                }else{
+
+                    $wheres .= $where[0] . " " . $where[1] . " " . $where[2];
+                }
             }
             if (trim($wheres) !== "") {
                 $wheres = " where " . $wheres;
@@ -103,60 +108,8 @@ class Parser implements IParser
         return " limit " . $this->limit . " offset " . $this->offset;
     }
 
-    protected function makeStmt($type, $arr)
-    {
-        $condition=false;
-        $grouping=false;
-        $ordering=false;
-        $stmt = "";
-        switch ($type) {
-            case "select":
-                $stmt = $this->makeStmtSelect($arr);
-                $grouping=true;
-                $ordering=true;
-                break;
-            case "insert":
-                $stmt = $this->makeStmtInsert();
-                break;
-            case "update":
-                $stmt = $this->makeStmtUpdate();
-                $condition=true;
-                break;
-            case "delete":
-                $stmt = $this->makeStmtDelete();
-                $condition=true;
-                break;
-            default:
-                $this->errors[] = [
-                    "Selection"=> "Please use a valid selector, 'select', 'insert', 'update', 'delete'",
-                ];
-                return false;
-                break;
-        }
 
 
-        //where
-        $where = $this->strConditions();
-        if($condition && trim($where) === ""){
-            $this->errors[] = [
-                "where"=> "where is obligatory in {$type}",
-            ];
-            return false;
-        }
-        $stmt .= $where;
-
-        if($grouping) {
-            //group
-            $stmt .= $this->strGroup();
-        }
-
-        if($ordering) {
-            //order
-            $stmt .= $this->strOrder();
-        }
-
-        return $stmt;
-    }
 
     protected function makeStmtSelect($arr): string
     {
@@ -169,12 +122,124 @@ class Parser implements IParser
         return $stmt;
     }
 
+    protected function strValues(array $arr = []): string
+    {
+        $attributes = "";
+        $values = [];
+        if (!empty($arr)) {
+            foreach ($arr as $attribute => $value) {
+                if (trim($attributes) !== "") {
+                    $attributes .= ", ";
+                }
+                $attributes .= $attribute;
+                $values[] = $value;
+            }
+        } else {
+            $attributes = $this->table . ".*";
+            $values[] = $this->table . ".*";
+        }
+
+        $values = $this->strBindings($values);
+
+        //$dObject = new DObject();
+        //$dObject->assoc(["attributes"=>$attributes,"values"=>$values]);
+        return "(".$attributes .") ".$values;
+    }
+
+    protected function strBindings($arr): string
+    {
+        $values = "";
+        if (!empty($arr)) {
+            foreach ($arr as $key => $value) {
+                if (trim($values) !== "") {
+                    $values .= ", ";
+                }
+                $binding = "dd_bound_" . $key;
+                $this->connection->db_bindings[] = [
+                    $binding => $value,
+                ];
+
+                $values .= ":" . $binding;
+            }
+            if (trim($values) !== "") {
+                $values = "values (" . $values . ")";
+            }
+        }
+        return $values;
+    }
+
     /**
      * @return mixed
      */
     protected function makeStmtInsert()
     {
-        // TODO: Implement makeStmtInsert() method.
+        $properties = json_decode(json_encode($this),true);
+        return "insert into ".$this->table." ".$this->strValues($properties);
+    }
+
+    protected function removePublicItems(){
+        $properties = json_decode($this,true);
+
+        foreach ($properties as $key => $property) {
+            if($key !== "_dd_items") {
+                unset($this->{$key});
+            }
+        }
+    }
+
+    protected function makeStmt($type, $arr)
+    {
+        $condition = false;
+        $grouping = false;
+        $ordering = false;
+        $stmt = "";
+        switch ($type) {
+            case "select":
+                $stmt = $this->makeStmtSelect($arr);
+                $grouping = true;
+                $ordering = true;
+                break;
+            case "insert":
+                $stmt = $this->makeStmtInsert();
+                break;
+            case "update":
+                $stmt = $this->makeStmtUpdate();
+                $condition = true;
+                break;
+            case "delete":
+                $stmt = $this->makeStmtDelete();
+                $condition = true;
+                break;
+            default:
+                $this->errors[] = [
+                    "Selection" => "Please use a valid selector, 'select', 'insert', 'update', 'delete'",
+                ];
+                return false;
+                break;
+        }
+
+
+        //where
+        $where = $this->strConditions();
+        if ($condition && trim($where) === "") {
+            $this->errors[] = [
+                "where" => "where is obligatory in {$type}",
+            ];
+            return false;
+        }
+        $stmt .= $where;
+
+        if ($grouping) {
+            //group
+            $stmt .= $this->strGroup();
+        }
+
+        if ($ordering) {
+            //order
+            $stmt .= $this->strOrder();
+        }
+
+        return $stmt;
     }
 
     /**
@@ -192,4 +257,5 @@ class Parser implements IParser
     {
         // TODO: Implement makeStmtDelete() method.
     }
+
 }

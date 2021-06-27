@@ -1,11 +1,20 @@
 <?php
+
 namespace Danidoble\Database\Interfaces;
 
 /**
  * Interface Sql
  * @package Danidoble\Database\Interfaces
  */
-Interface Sql{
+interface Sql
+{
+
+    /**
+     * @param bool $debug
+     * @return mixed
+     */
+    public function debug(bool $debug = false);
+
     /**
      * @return mixed
      */
@@ -16,20 +25,83 @@ Interface Sql{
      */
     public function delete();
 
-    public function orderBy($field,$order="asc");
+    /**
+     * @param $field
+     * @param string $order
+     * @return mixed
+     */
+    public function orderBy($field, string $order = "asc");
 
+    /**
+     * @param $field
+     * @return mixed
+     */
     public function groupBy($field);
 
-    public function get($arr = []);
+    /**
+     * @param array $arr
+     * @return mixed
+     */
+    public function get(array $arr = []);
 
+    /**
+     * @return mixed
+     */
     public function first();
 
-    public function paginate($limit,$fields=[]);
+    /**
+     * @param int $limit
+     * @param int $no_page
+     * @param array $fields
+     * @return mixed
+     */
+    public function paginate(int $limit, int $no_page, array $fields = []);
 
-    public function where($field,$value,$eval="=");
+    /**
+     * @param $field
+     * @param $value
+     * @param string $eval
+     * @return mixed
+     */
+    public function where($field, $value, string $eval = "=", $bypass = false);
 
-    public function from($table);
+    /**
+     * @param $table
+     * @return mixed
+     */
+    public static function from($table);
 
+    /**
+     * @param $table
+     * @return mixed
+     */
+    public function table($table);
+
+    /**
+     * @param $table
+     * @return mixed
+     */
     public function join($table);
 
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function id($name);
+
+    /**
+     * @param $stmt
+     * @return mixed
+     */
+    public function raw($stmt);
+
+    /**
+     * @return mixed
+     */
+    public function getItems();
+
+    /**
+     * @return mixed
+     */
+    public function getErrors();
 }
