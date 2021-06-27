@@ -1,0 +1,41 @@
+{
+  "name": "danidoble/database",
+  "description": "ORM mysql mariadb Database",
+  "type": "plugin",
+  "homepage": "https://github.com/danidoble/database",
+  "license": "MIT",
+  "suggest": {
+  },
+  "keywords": [
+    "danidoble",
+    "database",
+    "ORM"
+  ],
+  "authors": [
+    {
+      "name": "danidoble",
+      "email": "dani.doble.d@hotmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.3|^8.0",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^5.3",
+    "vlucas/phpdotenv": "^5.3"
+  },
+  "autoload": {
+    "files": [
+    ],
+    "psr-4": {
+      "Danidoble\\Database\\": "Src\\"
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "version": "v0.0.1"
+}
