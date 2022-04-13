@@ -1,15 +1,31 @@
 <?php
 /*
- * Created by  (c)danidoble 2021.
+ * Created by  (c)danidoble 2022.
  */
 
 namespace Danidoble\Database;
 
-use Danidoble\Database\Interfaces\Parser as IParser;
+use Danidoble\Database\Exceptions\DatabaseException;
+use JetBrains\PhpStorm\Pure;
 
 
-class Parser implements IParser
+class Parser
 {
+    protected string $table;
+    protected int $limit = 0;
+    protected int $offset = 0;
+    protected Connection $connection;
+    protected array $errors;
+    protected array $sets = [];
+    protected array $where = [];
+    protected array $inner_join = [];
+    protected array $group_by = [];
+    protected array $order_by = [];
+    protected array $left_join = [];
+    protected array $right_join = [];
+    protected array $cross_join = [];
+    protected bool $debug = false;
+
     /**
      * @param array $arr
      * @return string
@@ -39,16 +55,20 @@ class Parser implements IParser
         if (!empty($this->where)) {
             foreach ($this->where as $key => $where) {
                 if (trim($wheres) !== "") {
-                    $wheres .= " and ";
+                    if ($where[4] == "or") {
+                        $wheres .= " or ";
+                    } else {
+                        $wheres .= " and ";
+                    }
                 }
-                if(!$where[3]) {
+                if (!$where[3]) {
                     $binding = "dd_bound_" . $key;
                     $this->connection->db_bindings[] = [
                         $binding => $where[2],
                     ];
 
                     $wheres .= $where[0] . " " . $where[1] . " :" . $binding;
-                }else{
+                } else {
 
                     $wheres .= $where[0] . " " . $where[1] . " " . $where[2];
                 }
@@ -58,6 +78,74 @@ class Parser implements IParser
             }
         }
         return $wheres;
+    }
+
+    /**
+     * @return string
+     */
+    protected function strInnerJoins(): string
+    {
+        $joins = "";
+        if (!empty($this->inner_join)) {
+            foreach ($this->inner_join as $join) {
+                $joins .= " inner join $join[0] $join[4] on $join[1] $join[2] $join[3]";
+            }
+            if (trim($joins) !== "") {
+                $joins .= " ";
+            }
+        }
+        return $joins;
+    }
+
+    /**
+     * @return string
+     */
+    protected function strLeftJoins(): string
+    {
+        $joins = "";
+        if (!empty($this->left_join)) {
+            foreach ($this->left_join as $join) {
+                $joins .= " left join $join[0] $join[4] on $join[1] $join[2] $join[3]";
+            }
+            if (trim($joins) !== "") {
+                $joins .= " ";
+            }
+        }
+        return $joins;
+    }
+
+    /**
+     * @return string
+     */
+    protected function strRightJoins(): string
+    {
+        $joins = "";
+        if (!empty($this->right_join)) {
+            foreach ($this->right_join as $join) {
+                $joins .= " right join $join[0] $join[4] on $join[1] $join[2] $join[3]";
+            }
+            if (trim($joins) !== "") {
+                $joins .= " ";
+            }
+        }
+        return $joins;
+    }
+
+    /**
+     * @return string
+     */
+    protected function strCrossJoins(): string
+    {
+        $joins = "";
+        if (!empty($this->cross_join)) {
+            foreach ($this->cross_join as $join) {
+                $joins .= " cross join $join[0] $join[4] on $join[1] $join[2] $join[3]";
+            }
+            if (trim($joins) !== "") {
+                $joins .= " ";
+            }
+        }
+        return $joins;
     }
 
     /**
@@ -109,11 +197,52 @@ class Parser implements IParser
     }
 
 
-
-
-    protected function makeStmtSelect($arr): string
+    /**
+     * @param $arr
+     * @return string
+     */
+    #[Pure] protected function makeStmtSelect($arr): string
     {
         //select
+        if ((!empty($this->inner_join) || !empty($this->left_join) || !empty($this->right_join) || !empty($this->cross_join)) && empty($arr)) {
+            $arr[] = $this->table . ".*";
+            if (!empty($this->inner_join)) {
+                foreach ($this->inner_join as $join) {
+                    if ($join[4] !== null) {
+                        $arr[] = $join[4] . ".*";
+                    } else {
+                        $arr[] = $join[0] . ".*";
+                    }
+                }
+            }
+            if (!empty($this->left_join)) {
+                foreach ($this->left_join as $join) {
+                    if ($join[4] !== null) {
+                        $arr[] = $join[4] . ".*";
+                    } else {
+                        $arr[] = $join[0] . ".*";
+                    }
+                }
+            }
+            if (!empty($this->right_join)) {
+                foreach ($this->right_join as $join) {
+                    if ($join[4] !== null) {
+                        $arr[] = $join[4] . ".*";
+                    } else {
+                        $arr[] = $join[0] . ".*";
+                    }
+                }
+            }
+            if (!empty($this->cross_join)) {
+                foreach ($this->cross_join as $join) {
+                    if ($join[4] !== null) {
+                        $arr[] = $join[4] . ".*";
+                    } else {
+                        $arr[] = $join[0] . ".*";
+                    }
+                }
+            }
+        }
         $stmt = "select " . $this->strAttributes($arr) . " from " . $this->table;
 
         //joins
@@ -122,6 +251,10 @@ class Parser implements IParser
         return $stmt;
     }
 
+    /**
+     * @param array $arr
+     * @return string
+     */
     protected function strValues(array $arr = []): string
     {
         $attributes = "";
@@ -143,9 +276,13 @@ class Parser implements IParser
 
         //$dObject = new DObject();
         //$dObject->assoc(["attributes"=>$attributes,"values"=>$values]);
-        return "(".$attributes .") ".$values;
+        return "(" . $attributes . ") " . $values;
     }
 
+    /**
+     * @param $arr
+     * @return string
+     */
     protected function strBindings($arr): string
     {
         $values = "";
@@ -169,35 +306,49 @@ class Parser implements IParser
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    protected function makeStmtInsert()
+    protected function makeStmtInsert(): string
     {
-        $properties = json_decode(json_encode($this),true);
-        return "insert into ".$this->table." ".$this->strValues($properties);
+        $properties = json_decode(json_encode($this), true);
+        return "insert into " . $this->table . " " . $this->strValues($properties);
     }
 
-    protected function removePublicItems(){
-        $properties = json_decode($this,true);
+    /**
+     * @return void
+     */
+    protected function removePublicItems()
+    {
+        $debug = $this->debug;
+        $this->debug = true;
+        $properties = json_decode($this, true);
+        $this->debug = $debug;
 
         foreach ($properties as $key => $property) {
-            if($key !== "_dd_items") {
+            if ($key !== "_dd_items") {
                 unset($this->{$key});
             }
         }
     }
 
-    protected function makeStmt($type, $arr)
+    /**
+     * @param $type
+     * @param array $arr
+     * @return false|string
+     * @throws DatabaseException
+     */
+    protected function makeStmt($type, array $arr = []): bool|string
     {
         $condition = false;
         $grouping = false;
         $ordering = false;
-        $stmt = "";
+        $joining = false;
         switch ($type) {
             case "select":
                 $stmt = $this->makeStmtSelect($arr);
                 $grouping = true;
                 $ordering = true;
+                $joining = true;
                 break;
             case "insert":
                 $stmt = $this->makeStmtInsert();
@@ -215,17 +366,31 @@ class Parser implements IParser
                     "Selection" => "Please use a valid selector, 'select', 'insert', 'update', 'delete'",
                 ];
                 return false;
-                break;
         }
 
+        // JOINS
+        if ($joining) {
+            // inner
+            $inner_joins = $this->strInnerJoins();
+            $stmt .= $inner_joins;
+
+            // left
+            $left_joins = $this->strLeftJoins();
+            $stmt .= $left_joins;
+
+            // right
+            $right_joins = $this->strRightJoins();
+            $stmt .= $right_joins;
+
+            // cross
+            $cross_joins = $this->strCrossJoins();
+            $stmt .= $cross_joins;
+        }
 
         //where
         $where = $this->strConditions();
         if ($condition && trim($where) === "") {
-            $this->errors[] = [
-                "where" => "where is obligatory in {$type}",
-            ];
-            return false;
+            throw new DatabaseException("Where is required on $type");
         }
         $stmt .= $where;
 
@@ -244,18 +409,61 @@ class Parser implements IParser
 
     /**
      * @return mixed
+     * @throws DatabaseException
      */
-    protected function makeStmtUpdate()
+    protected function makeStmtUpdate(): string
     {
-        // TODO: Implement makeStmtUpdate() method.
+        $properties = json_decode(json_encode($this), true);
+        if (empty($properties)) {
+            $properties = [];
+            foreach ($this->sets as $set) {
+                $properties[$set[2]] = [$set[0], $set[1]];
+            }
+
+            if (count($properties) < 1) {
+                throw new DatabaseException("You need at least one data to update");
+            }
+
+            $str = "update " . $this->table . " set ";
+            $values = "";
+
+            foreach ($properties as $key => $value) {
+                if (trim($values) !== "") {
+                    $values .= ", ";
+                }
+                $binding = "dd_bound_update_" . $key;
+                $this->connection->db_bindings[] = [
+                    $binding => $value[1],
+                ];
+                $values .= $value[0] . "=:" . $binding;
+            }
+
+            return $str . $values;
+        }
+
+        $str = "update " . $this->table . " set ";
+        $values = "";
+
+        foreach ($properties as $key => $value) {
+            if (trim($values) !== "") {
+                $values .= ", ";
+            }
+            $binding = "dd_bound_update_" . $key;
+            $this->connection->db_bindings[] = [
+                $binding => $value,
+            ];
+            $values .= $key . "=:" . $binding;
+        }
+
+        return $str . $values;
     }
 
     /**
      * @return mixed
      */
-    protected function makeStmtDelete()
+    protected function makeStmtDelete(): string
     {
-        // TODO: Implement makeStmtDelete() method.
+        return "delete from " . $this->table;
     }
 
 }

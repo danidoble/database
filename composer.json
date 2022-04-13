@@ -1,31 +1,48 @@
 {
   "name": "danidoble/database",
   "description": "ORM mysql mariadb Database",
-  "type": "plugin",
+  "version": "v0.0.2",
+  "type": "library",
   "homepage": "https://github.com/danidoble/database",
   "license": "MIT",
-  "suggest": {
-  },
   "keywords": [
     "danidoble",
     "database",
-    "ORM"
+    "ORM",
+    "mysql",
+    "mariadb"
   ],
   "authors": [
     {
       "name": "danidoble",
-      "email": "dani.doble.d@hotmail.com"
+      "email": "dani.doble.d@hotmail.com",
+      "homepage": "https://danidoble.com",
+      "role": "Developer"
     }
   ],
+  "support": {
+    "email": "ddanidoble@gmail.com",
+    "issues": "https://github.com/danidoble/database/issues",
+    "source": "https://github.com/danidoble/database"
+  },
   "minimum-stability": "stable",
+  "prefer-stable": true,
   "require": {
-    "php": "^7.3|^8.0",
+    "php": "^8.0",
     "ext-json": "*",
     "ext-pdo": "*"
   },
   "require-dev": {
-    "symfony/var-dumper": "^5.3",
-    "vlucas/phpdotenv": "^5.3"
+    "spatie/ignition": "^1.2",
+    "symfony/var-dumper": "^6.0",
+    "vlucas/phpdotenv": "^v5.4"
+  },
+  "suggest": {
+    "vlucas/phpdotenv": "This allow load credentials without do hard code"
+  },
+  "suggest-dev": {
+    "symfony/var-dumper": "If you need see data of variables, const, etc. With beautify format",
+    "spatie/ignition": "Allow get Errors, Exceptions, etc. In screen, so can fix problems before go to production"
   },
   "autoload": {
     "files": [
@@ -34,8 +51,10 @@
       "Danidoble\\Database\\": "Src\\"
     },
     "exclude-from-classmap": [
-      "/Tests/"
+      "/tests/"
     ]
   },
-  "version": "v0.0.1"
+  "config": {
+    "sort-packages": true
+  }
 }

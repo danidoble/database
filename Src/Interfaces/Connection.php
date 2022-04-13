@@ -1,6 +1,6 @@
 <?php
 /*
- * Created by  (c)danidoble 2021.
+ * Created by (c)danidoble 2022.
  */
 
 namespace Danidoble\Database\Interfaces;
@@ -13,37 +13,37 @@ interface Connection
 {
     /**
      * @param $db_host
-     * @return mixed
+     * @return Connection
      */
-    public function setDbHost($db_host);
+    public function setDbHost($db_host): Connection;
 
     /**
      * @param $db_name
-     * @return mixed
+     * @return Connection
      */
-    public function SetDbName($db_name);
+    public function SetDbName($db_name): Connection;
 
     /**
      * @param $db_username
-     * @return mixed
+     * @return Connection
      */
-    public function SetDbUsername($db_username);
+    public function SetDbUsername($db_username): Connection;
 
     /**
      * @param $db_password
-     * @return mixed
+     * @return Connection
      */
-    public function SetDbPassword($db_password);
+    public function SetDbPassword($db_password): Connection;
 
     /**
-     * @return mixed
+     * @return Connection
      */
-    public function closeConnection();
+    public function closeConnection(): Connection;
 
     /**
      * @param $exception
-     * @return mixed
+     * @return Connection
      */
-    public function connect($exception);
+    public function connect($exception): Connection;
 
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * Created by  (c)danidoble 2021.
+ * Created by (c)danidoble 2022.
  */
 
 namespace Danidoble\Database\Interfaces;
@@ -11,29 +11,42 @@ namespace Danidoble\Database\Interfaces;
 interface DObject
 {
     /**
-     * @param $items
-     * @return mixed
+     * @param object|array $items
+     * @return void
      */
-    public function assoc($items);
+    public function assoc(object|array $items): void;
 
     /**
-     * @param $items_arr
-     * @return mixed
+     * @return string
      */
-    public function fetch($items_arr);
+    public function __toString(): string;
 
     /**
-     * @return mixed
+     * @return DObject
      */
-    public function __toString();
-
-    /**
-     * @return mixed
-     */
-    public function __invoke();
+    public function __invoke(): DObject;
 
     /**
      * DObject constructor.
      */
     public function __construct();
+
+    /**
+     * @param string $name
+     * @param mixed $val
+     * @return void
+     */
+    public function __set(string $name, mixed $val): void;
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name): mixed;
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function __isset(string $name): bool;
 }

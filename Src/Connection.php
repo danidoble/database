@@ -1,28 +1,29 @@
 <?php
 /*
- * Created by  (c)danidoble 2021.
+ * Created by  (c)danidoble 2022.
  */
 
 namespace Danidoble\Database;
 
 use Danidoble\Database\Interfaces\Connection as IDD;
 use PDO;
-use PDOException;
+use PDOStatement;
 
 /**
  * Class Connection
  * @package Danidoble\Database
  */
-class Connection implements IDD {
+class Connection implements IDD
+{
 
-    protected $db_username;
-    protected $db_name;
-    protected $db_password;
-    protected $db_host;
-    public $db_result;
-    public $db_connection;
-    public $db_sql_statement;
-    public $db_bindings;
+    protected string $db_username;
+    protected string $db_name;
+    protected string $db_password;
+    protected string $db_host;
+    public ?PDO $db_connection;
+    public PDOStatement $db_sql_statement;
+    public array $db_bindings = [];
+    //public $db_result;
 
     /**
      * Connection constructor.
@@ -31,7 +32,7 @@ class Connection implements IDD {
      * @param string $db_password
      * @param string $db_username
      */
-    public function __construct(string $db_name="danidoble", string $db_password="", string $db_username="root", string $db_host="localhost")
+    public function __construct(string $db_name = "danidoble", string $db_password = "", string $db_username = "root", string $db_host = "localhost")
     {
         $this->db_username = $db_username;
         $this->db_name = $db_name;
@@ -40,13 +41,12 @@ class Connection implements IDD {
     }
 
     /**
-     * @return false|string
+     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return json_encode($this);
     }
-
 
     /**
      * @param $db_username
@@ -89,20 +89,6 @@ class Connection implements IDD {
     }
 
     /**
-     * @return PDO|null
-     */
-    private function setDbConnection(): ?PDO
-    {
-        try {
-            $dsn = "mysql:host=$this->db_host;dbname=$this->db_name";
-            return new PDO($dsn, $this->db_username, $this->db_password);
-        } catch (PDOException $e){
-            echo $e->getMessage();
-        }
-        return null;
-    }
-
-    /**
      * @return $this
      */
     public function closeConnection(): Connection
@@ -116,13 +102,21 @@ class Connection implements IDD {
      * @param int $exception
      * @return $this
      */
-    public function connect($exception = PDO::ERRMODE_SILENT): Connection
+    public function connect($exception = PDO::ERRMODE_EXCEPTION): Connection
     {
         $this->db_connection = $this->setDbConnection();
-        if($this->db_connection !== null){
-            $this->db_connection->setAttribute(PDO::ATTR_ERRMODE, $exception);
-        }
+        $this->db_connection?->setAttribute(PDO::ATTR_ERRMODE, $exception);
 
         return $this;
     }
+
+    /**
+     * @return ?PDO
+     */
+    private function setDbConnection(): ?PDO
+    {
+        $dsn = "mysql:host=$this->db_host;dbname=$this->db_name";
+        return new PDO($dsn, $this->db_username, $this->db_password);
+    }
+
 }
