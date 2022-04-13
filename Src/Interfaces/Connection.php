@@ -5,6 +5,8 @@
 
 namespace Danidoble\Database\Interfaces;
 
+use Danidoble\Database\Connection as CConnection;
+
 /**
  * Interface Connection
  * @package Connection\Connection\Interfaces
@@ -13,37 +15,37 @@ interface Connection
 {
     /**
      * @param $db_host
-     * @return Connection
+     * @return CConnection
      */
-    public function setDbHost($db_host): Connection;
+    public function setDbHost($db_host): CConnection;
 
     /**
      * @param $db_name
-     * @return Connection
+     * @return CConnection
      */
-    public function SetDbName($db_name): Connection;
+    public function SetDbName($db_name): CConnection;
 
     /**
      * @param $db_username
-     * @return Connection
+     * @return CConnection
      */
-    public function SetDbUsername($db_username): Connection;
+    public function SetDbUsername($db_username): CConnection;
 
     /**
      * @param $db_password
-     * @return Connection
+     * @return CConnection
      */
-    public function SetDbPassword($db_password): Connection;
+    public function SetDbPassword($db_password): CConnection;
 
     /**
-     * @return Connection
+     * @return CConnection
      */
-    public function closeConnection(): Connection;
+    public function closeConnection(): CConnection;
 
     /**
      * @param $exception
-     * @return Connection
+     * @return CConnection
      */
-    public function connect($exception): Connection;
+    public function connect($exception): CConnection;
 
 }

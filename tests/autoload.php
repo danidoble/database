@@ -3,16 +3,11 @@
  * Created by  (c)danidoble 2022.
  */
 
-use Spatie\Ignition\Ignition;
+use Symfony\Component\ErrorHandler\Debug;
 
 include __DIR__ . '/../vendor/autoload.php';
 
-define('BASE_PATH', realpath(str_replace("/tests", "", __DIR__)));
-
-Ignition::make()
-    ->setTheme('dark')
-    ->applicationPath(BASE_PATH)
-    ->register();
+Debug::enable();
 
 date_default_timezone_set('America/Mexico_City');
 

@@ -12,11 +12,11 @@ use PDO;
 
 class DatabaseCredentials implements IDatabaseCredentials
 {
-    protected string $host;
-    protected string $user;
-    protected string $pass;
-    protected string $name;
-    protected int $pdo_error_mode = PDO::ERRMODE_EXCEPTION;
+    protected $host;
+    protected $user;
+    protected $pass;
+    protected $name;
+    protected $pdo_error_mode = PDO::ERRMODE_EXCEPTION;
 
     /**
      * @param string|null $db_host
@@ -83,13 +83,15 @@ class DatabaseCredentials implements IDatabaseCredentials
      */
     public function setPDOErrorMode(int $error_mode = PDO::ERRMODE_EXCEPTION)
     {
-        $this->pdo_error_mode = match ($error_mode) {
-            PDO::ERRMODE_SILENT,
-            PDO::ERRMODE_WARNING,
-            PDO::ERRMODE_EXCEPTION
-                => $error_mode,
-            default => throw new DatabaseException("Error mode invalid, see: https://www.php.net/manual/es/pdo.error-handling.php"),
-        };
+        switch ($this->pdo_error_mode) {
+            case PDO::ERRMODE_SILENT:
+            case PDO::ERRMODE_WARNING:
+            case PDO::ERRMODE_EXCEPTION:
+                $this->pdo_error_mode = $error_mode;
+                break;
+            default:
+                throw new DatabaseException("Error mode invalid, see: https://www.php.net/manual/es/pdo.error-handling.php");
+        }
     }
 
     /**

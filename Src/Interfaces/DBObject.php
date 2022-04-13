@@ -5,9 +5,9 @@
 
 namespace Danidoble\Database\Interfaces;
 
-use \Danidoble\Database\DBObject as CDBObject;
+use Danidoble\Database\DBObject as CDBObject;
 use Danidoble\Database\DObject;
-use \Danidoble\Database\Sql as CSql;
+use Danidoble\Database\Sql as CSql;
 
 /**
  * Interface DBObject
@@ -23,7 +23,7 @@ interface DBObject
     /**
      * @return CDBObject
      */
-    public function __invoke(): static;
+    public function __invoke(): CDBObject;
 
     /**
      * DObject constructor.
@@ -35,13 +35,13 @@ interface DBObject
      * @param mixed $val
      * @return void
      */
-    public function __set(string $name, mixed $val): void;
+    public function __set(string $name, $val): void;
 
     /**
      * @param string $name
      * @return mixed
      */
-    public function __get(string $name): mixed;
+    public function __get(string $name);
 
     /**
      * @param string $name
@@ -68,17 +68,17 @@ interface DBObject
     /**
      * @return CDBObject|CSql
      */
-    public function save(): static|CSql;
+    public function save();
 
     /**
      * @return CDBObject|DObject|$this|CSql
      */
-    public function delete(): static|CDBObject|DObject|CSql;
+    public function delete();
 
     /**
      * @return CDBObject|DObject|CSql|$this
      */
-    public function forceDelete(): static|CDBObject|DObject|CSql;
+    public function forceDelete();
 
     /**
      * @return DObject
@@ -91,4 +91,8 @@ interface DBObject
      */
     public function debug(bool $val = true): CDBObject;
 
+    /**
+     * @return mixed
+     */
+    public function getItems();
 }

@@ -13,13 +13,13 @@ use Danidoble\Database\Interfaces\DBObject as IDBObject;
  */
 class DBObject implements IDBObject
 {
-    protected DObject $original;
-    protected DObject $items;
-    protected ?string $table;
-    protected ?string $name_id;
-    protected bool $lock = false;
-    protected bool $debug = false;
-    protected bool $force_delete = false;
+    protected $original;
+    protected $items;
+    protected $table;
+    protected $name_id;
+    protected $lock = false;
+    protected $debug = false;
+    protected $force_delete = false;
 
     public function __construct(...$data_table)
     {
@@ -33,7 +33,7 @@ class DBObject implements IDBObject
      * @param mixed $val
      * @return void
      */
-    public function __set(string $name, mixed $val): void
+    public function __set(string $name, $val): void
     {
         if (!isset($this->items)) {
             $this->items = new DObject();
@@ -52,7 +52,7 @@ class DBObject implements IDBObject
      * @param string $name
      * @return mixed
      */
-    public function __get(string $name): mixed
+    public function __get(string $name)
     {
         if ($name === "original" && !isset($this->items->{$name})) {
             return null;
@@ -92,7 +92,7 @@ class DBObject implements IDBObject
     /**
      * @return $this
      */
-    public function __invoke(): static
+    public function __invoke(): DBObject
     {
         return $this;
     }
@@ -117,7 +117,7 @@ class DBObject implements IDBObject
      * @param bool $val
      * @return $this
      */
-    public function debug(bool $val = false): static
+    public function debug(bool $val = false): DBObject
     {
         $this->debug = true;
         return $this;
@@ -153,7 +153,7 @@ class DBObject implements IDBObject
      * @return $this|Sql
      * @throws Exceptions\DatabaseException
      */
-    public function save(): static|Sql
+    public function save()
     {
         $x = new Sql();
         $x->table($this->table);
@@ -176,7 +176,7 @@ class DBObject implements IDBObject
      * @return $this|DBObject|DObject|Sql
      * @throws Exceptions\DatabaseException
      */
-    public function forceDelete(): static|DBObject|DObject|Sql
+    public function forceDelete()
     {
         $this->force_delete = true;
         return $this->delete();
@@ -187,7 +187,7 @@ class DBObject implements IDBObject
      * @return $this|DBObject|DObject|Sql
      * @throws Exceptions\DatabaseException
      */
-    public function delete(): static|DBObject|DObject|Sql
+    public function delete()
     {
         $x = new Sql();
         $x->table($this->table);

@@ -14,7 +14,7 @@ require_once "autoload.php";
 echoCliWeb("Update data with select");
 $user = Sql::from("users")->first();
 if (empty($user)) {
-    dd("esta vacio ");
+    dd("is empty");
 }
 $x = $user->delete();
 dump($x);
@@ -27,7 +27,7 @@ dump($x);
 echoCliWeb("Update data with select");
 $user = Sql::from("users")->first();
 if (empty($user)) {
-    dd("esta vacio ");
+    dd("is empty");
 }
 $x = $user->forceDelete();
 dump($x);

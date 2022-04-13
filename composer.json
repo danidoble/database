@@ -28,21 +28,19 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
-    "php": "^8.0",
+    "php": "^7.3|^7.4",
     "ext-json": "*",
-    "ext-pdo": "*"
-  },
-  "require-dev": {
-    "spatie/ignition": "^1.2",
-    "symfony/var-dumper": "^6.0",
-    "vlucas/phpdotenv": "^v5.4"
+    "ext-pdo": "*",
+    "symfony/error-handler": "^5.4",
+    "symfony/var-dumper": "^5.4",
+    "vlucas/phpdotenv": "^5.4"
   },
   "suggest": {
     "vlucas/phpdotenv": "This allow load credentials without do hard code"
   },
   "suggest-dev": {
     "symfony/var-dumper": "If you need see data of variables, const, etc. With beautify format",
-    "spatie/ignition": "Allow get Errors, Exceptions, etc. In screen, so can fix problems before go to production"
+    "symfony/error-handler": "Allow get Errors, Exceptions, etc. In screen, so can fix problems before go to production"
   },
   "autoload": {
     "files": [

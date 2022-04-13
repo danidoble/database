@@ -6,7 +6,6 @@
 namespace Danidoble\Database;
 
 use Danidoble\Database\Interfaces\DObject as IDObject;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class DObject
@@ -14,11 +13,11 @@ use JetBrains\PhpStorm\Pure;
  */
 class DObject implements IDObject
 {
-    protected bool $error = false;
-    protected array $errors = [];
-    public mixed $items;
-    public int $no_page;
-    public int $total_no_pages;
+    protected $error = false;
+    protected $errors = [];
+    public $items;
+    public $no_page;
+    public $total_no_pages;
 
     /**
      * DObject constructor.
@@ -33,7 +32,7 @@ class DObject implements IDObject
      * @param mixed $val
      * @return void
      */
-    public function __set(string $name, mixed $val): void
+    public function __set(string $name, $val): void
     {
         $this->{$name} = $val;
     }
@@ -42,7 +41,7 @@ class DObject implements IDObject
      * @param $name
      * @return mixed
      */
-    public function __get($name): mixed
+    public function __get($name)
     {
         if (!isset($this->{$name})) {
             return null;
@@ -84,7 +83,7 @@ class DObject implements IDObject
      * @param object|array $items
      * @return void
      */
-    public function assoc(object|array $items): void
+    public function assoc($items): void
     {
         unset ($this->items);
         foreach ($items as $key => $val) {
@@ -104,7 +103,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function save(): string
+    public function save(): string
     {
         return $this->incorrectClass();
     }
@@ -112,7 +111,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function find(): string
+    public function find(): string
     {
         return $this->incorrectClass();
     }
@@ -120,7 +119,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function first(): string
+    public function first(): string
     {
         return $this->incorrectClass();
     }
@@ -128,7 +127,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function update(): string
+    public function update(): string
     {
         return $this->incorrectClass();
     }
@@ -136,7 +135,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function delete(): string
+    public function delete(): string
     {
         return $this->incorrectClass();
     }
@@ -144,7 +143,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function forceDelete(): string
+    public function forceDelete(): string
     {
         return $this->incorrectClass();
     }
@@ -152,7 +151,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function get(): string
+    public function get(): string
     {
         return $this->incorrectClass();
     }

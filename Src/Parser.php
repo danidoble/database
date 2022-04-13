@@ -6,25 +6,24 @@
 namespace Danidoble\Database;
 
 use Danidoble\Database\Exceptions\DatabaseException;
-use JetBrains\PhpStorm\Pure;
 
 
 class Parser
 {
-    protected string $table;
-    protected int $limit = 0;
-    protected int $offset = 0;
-    protected Connection $connection;
-    protected array $errors;
-    protected array $sets = [];
-    protected array $where = [];
-    protected array $inner_join = [];
-    protected array $group_by = [];
-    protected array $order_by = [];
-    protected array $left_join = [];
-    protected array $right_join = [];
-    protected array $cross_join = [];
-    protected bool $debug = false;
+    protected $table;
+    protected $limit = 0;
+    protected $offset = 0;
+    protected $connection;
+    protected $errors;
+    protected $sets = [];
+    protected $where = [];
+    protected $inner_join = [];
+    protected $group_by = [];
+    protected $order_by = [];
+    protected $left_join = [];
+    protected $right_join = [];
+    protected $cross_join = [];
+    protected $debug = false;
 
     /**
      * @param array $arr
@@ -201,7 +200,7 @@ class Parser
      * @param $arr
      * @return string
      */
-    #[Pure] protected function makeStmtSelect($arr): string
+    protected function makeStmtSelect($arr): string
     {
         //select
         if ((!empty($this->inner_join) || !empty($this->left_join) || !empty($this->right_join) || !empty($this->cross_join)) && empty($arr)) {
@@ -337,7 +336,7 @@ class Parser
      * @return false|string
      * @throws DatabaseException
      */
-    protected function makeStmt($type, array $arr = []): bool|string
+    protected function makeStmt($type, array $arr = [])
     {
         $condition = false;
         $grouping = false;

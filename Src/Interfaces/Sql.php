@@ -23,13 +23,13 @@ interface Sql
      * @param bool $debug
      * @return $this
      */
-    public function debug(bool $debug = false): static;
+    public function debug(bool $debug = false): CSql;
 
     /**
      * @return array|bool|DBObject|DObject|CSql
      * @throws DatabaseException
      */
-    public function save(): array|bool|DBObject|DObject|CSql;
+    public function save();
 
     /**
      * @param $field
@@ -51,14 +51,14 @@ interface Sql
      * @return CSql|DObject|array
      * @throws DatabaseException
      */
-    public function get(array $arr = [], int $limit = 0, int $offset = 0): CSql|DObject|array;
+    public function get(array $arr = [], int $limit = 0, int $offset = 0);
 
     /**
      * @param array $arr
      * @return CSql|DObject|array|DBObject
      * @throws DatabaseException
      */
-    public function first(array $arr = []): CSql|DObject|array|DBObject;
+    public function first(array $arr = []);
 
     /**
      * @param string|int $id
@@ -66,7 +66,7 @@ interface Sql
      * @return CSql|DObject|array|DBObject
      * @throws DatabaseException
      */
-    public function find(string|int $id, array $arr = []): CSql|DObject|array|DBObject;
+    public function find($id, array $arr = []);
 
     /**
      * @param int $limit
@@ -75,7 +75,7 @@ interface Sql
      * @return DObject|Sql|array
      * @throws DatabaseException
      */
-    public function paginate(int $limit, int $no_page, array $fields = []): DObject|static|array;
+    public function paginate(int $limit, int $no_page, array $fields = []);
 
     /**
      * @param $field
@@ -104,7 +104,7 @@ interface Sql
      * @param $name
      * @return CSql
      */
-    public function id($name): static;
+    public function id($name): CSql;
 
     /**
      * @param $stmt
@@ -116,7 +116,7 @@ interface Sql
     /**
      * @return DObject|array
      */
-    public function getItems(): DObject|array;
+    public function getItems();
 
     /**
      * @return array
@@ -129,14 +129,14 @@ interface Sql
      * @return DObject|CSql|array
      * @throws DatabaseException
      */
-    public function count($id = null, string $name = "total"): CSql|DObject|array;
+    public function count($id = null, string $name = "total");
 
     /**
      * @param string $name
      * @param mixed $val
      * @return void
      */
-    public function __set(string $name, mixed $val): void;
+    public function __set(string $name, $val): void;
 
     /**
      * @param string $table
@@ -146,7 +146,7 @@ interface Sql
      * @param string|null $alias
      * @return $this
      */
-    public function join(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static;
+    public function join(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): CSql;
 
     /**
      * @param string $table
@@ -156,7 +156,7 @@ interface Sql
      * @param string|null $alias
      * @return $this
      */
-    public function innerJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static;
+    public function innerJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): CSql;
 
     /**
      * @param string $table
@@ -166,7 +166,7 @@ interface Sql
      * @param string|null $alias
      * @return $this
      */
-    public function leftJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static;
+    public function leftJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): CSql;
 
     /**
      * @param string $table
@@ -176,7 +176,7 @@ interface Sql
      * @param string|null $alias
      * @return $this
      */
-    public function rightJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static;
+    public function rightJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): CSql;
 
     /**
      * @param string $table
@@ -186,20 +186,20 @@ interface Sql
      * @param string|null $alias
      * @return $this
      */
-    public function crossJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static;
+    public function crossJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): CSql;
 
 
     /**
      * @param int $limit
      * @return $this
      */
-    public function limit(int $limit): static;
+    public function limit(int $limit): CSql;
 
     /**
      * @param int $offset
      * @return $this
      */
-    public function offset(int $offset): static;
+    public function offset(int $offset): CSql;
 
 
     /**
@@ -207,13 +207,13 @@ interface Sql
      * @param mixed $value
      * @return $this
      */
-    public function set(string $field, mixed $value): static;
+    public function set(string $field, $value): CSql;
 
     /**
      * @return array|bool|DBObject|DObject|static
      * @throws DatabaseException
      */
-    public function update(): array|bool|DBObject|DObject|static;
+    public function update();
 
     /**
      * Sql constructor.
@@ -231,7 +231,7 @@ interface Sql
     /**
      * @return object|array
      */
-    public function __invoke(): object|array;
+    public function __invoke();
 
     /**
      * @param $field
@@ -271,11 +271,11 @@ interface Sql
      * @return array|bool|DBObject|DObject|CSql
      * @throws DatabaseException
      */
-    public function delete(): array|bool|DBObject|DObject|CSql;
+    public function delete();
 
     /**
      * @return array|bool|DBObject|DObject|CSql
      * @throws DatabaseException
      */
-    public function forceDelete(): array|bool|DBObject|DObject|CSql;
+    public function forceDelete();
 }

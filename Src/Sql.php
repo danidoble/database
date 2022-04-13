@@ -16,15 +16,15 @@ use PDO;
  */
 class Sql extends Parser implements ISql
 {
-    protected string $_id_dd_db = 'id';
-    protected array $errors = [];
-    protected DBObject|DObject|array|bool $_dd_items;
-    protected string|int|null $inserted_id = null;
-    protected DObject $paginate;
-    private bool $this_use_joins = false;
-    private bool $multiple_response = false;
-    private bool $response = true;
-    protected int $affected_rows = 0;
+    protected $_id_dd_db = 'id';
+    protected $errors = [];
+    protected $_dd_items;
+    protected $inserted_id = null;
+    protected $paginate;
+    private $this_use_joins = false;
+    private $multiple_response = false;
+    private $response = true;
+    protected $affected_rows = 0;
 
     /**
      * Sql constructor.
@@ -48,7 +48,7 @@ class Sql extends Parser implements ISql
     /**
      * @return object|array
      */
-    public function __invoke(): object|array
+    public function __invoke()
     {
         return $this->_dd_items;
     }
@@ -58,7 +58,7 @@ class Sql extends Parser implements ISql
      * @param mixed $val
      * @return void
      */
-    public function __set(string $name, mixed $val): void
+    public function __set(string $name, $val): void
     {
         $this->{$name} = $val;
     }
@@ -67,7 +67,7 @@ class Sql extends Parser implements ISql
      * @param bool $debug
      * @return $this
      */
-    public function debug(bool $debug = false): static
+    public function debug(bool $debug = false): Sql
     {
         $this->debug = $debug;
         return $this;
@@ -256,10 +256,10 @@ class Sql extends Parser implements ISql
 
     /**
      * @param array $arr
-     * @return Sql|DObject|array|DBObject
+     * @return mixed
      * @throws DatabaseException
      */
-    public function first(array $arr = []): Sql|DObject|array|DBObject
+    public function first(array $arr = [])
     {
         $stmt = $this->makeStmt("select", $arr);
 
@@ -275,10 +275,10 @@ class Sql extends Parser implements ISql
     /**
      * @param string|int $id
      * @param array $arr
-     * @return Sql|DObject|array|DBObject
+     * @return mixed
      * @throws DatabaseException
      */
-    public function find(string|int $id, array $arr = []): Sql|DObject|array|DBObject
+    public function find($id, array $arr = [])
     {
         $this->where($this->_id_dd_db, $id);
         $stmt = $this->makeStmt("select", $arr);
@@ -299,7 +299,7 @@ class Sql extends Parser implements ISql
      * @return Sql|DObject|array
      * @throws DatabaseException
      */
-    public function get(array $arr = [], ?int $limit = null, ?int $offset = null): Sql|DObject|array
+    public function get(array $arr = [], ?int $limit = null, ?int $offset = null)
     {
         $this->multiple_response = true;
         $stmt = $this->makeStmt("select", $arr);
@@ -326,7 +326,7 @@ class Sql extends Parser implements ISql
      * @return DObject|Sql|array
      * @throws DatabaseException
      */
-    public function count($id = null, string $name = "total"): Sql|DObject|array
+    public function count($id = null, string $name = "total")
     {
         $counter = $id !== null ? $id : "*";
         $stmt = $this->makeStmt("select", ["count($counter) as $name"]);
@@ -345,7 +345,7 @@ class Sql extends Parser implements ISql
      * @return DObject|Sql|array
      * @throws DatabaseException
      */
-    public function paginate(int $limit = 20, int $no_page = 1, array $fields = []): DObject|static|array
+    public function paginate(int $limit = 20, int $no_page = 1, array $fields = [])
     {
         $this->multiple_response = true;
         $stmt = $this->makeStmt("select", $fields);
@@ -383,7 +383,7 @@ class Sql extends Parser implements ISql
      * @param $name
      * @return $this
      */
-    public function id($name): static
+    public function id($name): Sql
     {
         $this->_id_dd_db = $name;
         return $this;
@@ -393,7 +393,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|static
      * @throws DatabaseException
      */
-    public function update(): array|bool|DBObject|DObject|static
+    public function update()
     {
         $type = "update";
         if (!isset($this->{$this->_id_dd_db})) {
@@ -426,7 +426,7 @@ class Sql extends Parser implements ISql
      * @param mixed $value
      * @return $this
      */
-    public function set(string $field, mixed $value): static
+    public function set(string $field, $value): Sql
     {
         if (!str_contains($field, '.')) {
             $field_table = $this->table . '_' . $field;
@@ -446,7 +446,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|Sql
      * @throws DatabaseException
      */
-    public function save(): array|bool|DBObject|DObject|Sql
+    public function save()
     {
         if ($this->this_use_joins) {
             $this->errors[] = "Multiples tables were set, you can only insert or update one table at time.";
@@ -490,7 +490,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|$this
      * @throws DatabaseException
      */
-    public function delete(): array|bool|DBObject|DObject|Sql
+    public function delete()
     {
         $this->response = false;
         if (!property_exists($this, 'deleted_at')) {
@@ -503,7 +503,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|$this
      * @throws DatabaseException
      */
-    public function forceDelete(): array|bool|DBObject|DObject|Sql
+    public function forceDelete()
     {
         $this->response = false;
         $this->where($this->_id_dd_db, $this->{$this->_id_dd_db});
@@ -516,7 +516,7 @@ class Sql extends Parser implements ISql
     /**
      * @return DObject|array
      */
-    public function getItems(): DObject|array
+    public function getItems()
     {
         return $this->_dd_items;
     }
@@ -537,7 +537,7 @@ class Sql extends Parser implements ISql
      * @param string|null $alias
      * @return $this
      */
-    public function join(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static
+    public function join(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): Sql
     {
         return $this->joinsPush('inner', $table, $name_id, $eval, $foreign_name_id, $alias);
     }
@@ -550,7 +550,7 @@ class Sql extends Parser implements ISql
      * @param string|null $alias
      * @return $this
      */
-    public function innerJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static
+    public function innerJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): Sql
     {
         return $this->joinsPush('inner', $table, $name_id, $eval, $foreign_name_id, $alias);
     }
@@ -563,7 +563,7 @@ class Sql extends Parser implements ISql
      * @param string|null $alias
      * @return $this
      */
-    public function leftJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static
+    public function leftJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): Sql
     {
         return $this->joinsPush('left', $table, $name_id, $eval, $foreign_name_id, $alias);
     }
@@ -576,7 +576,7 @@ class Sql extends Parser implements ISql
      * @param string|null $alias
      * @return $this
      */
-    public function rightJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static
+    public function rightJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): Sql
     {
         return $this->joinsPush('right', $table, $name_id, $eval, $foreign_name_id, $alias);
     }
@@ -589,7 +589,7 @@ class Sql extends Parser implements ISql
      * @param string|null $alias
      * @return $this
      */
-    public function crossJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static
+    public function crossJoin(string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): Sql
     {
         return $this->joinsPush('cross', $table, $name_id, $eval, $foreign_name_id, $alias);
     }
@@ -598,7 +598,7 @@ class Sql extends Parser implements ISql
      * @param int $limit
      * @return $this
      */
-    public function limit(int $limit): static
+    public function limit(int $limit): Sql
     {
         $this->limit = $limit;
         return $this;
@@ -608,7 +608,7 @@ class Sql extends Parser implements ISql
      * @param int $offset
      * @return $this
      */
-    public function offset(int $offset): static
+    public function offset(int $offset): Sql
     {
         $this->offset = $offset;
         return $this;
@@ -766,7 +766,7 @@ class Sql extends Parser implements ISql
      * @param string|null $alias
      * @return $this
      */
-    private function joinsPush(string $name_join, string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): static
+    private function joinsPush(string $name_join, string $table, string $name_id, string $eval, string $foreign_name_id, ?string $alias = null): Sql
     {
         $this->this_use_joins = true;
         if (!str_contains($name_id, '.')) {

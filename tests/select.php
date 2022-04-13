@@ -18,13 +18,7 @@ $users = Sql::from("users")
     ->where('name', '%fer%', 'like')
     ->paginate(6,1);
 
-foreach ($users->items as $user){
-    $user->name = "pepinillos";
-    $user->save();
-    dd($user);
-}
-die();
-dd($users);
+dump($users);
 
 /* *******************************************************************
  *              Conditions where, multiple responses

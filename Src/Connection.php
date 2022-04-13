@@ -7,7 +7,6 @@ namespace Danidoble\Database;
 
 use Danidoble\Database\Interfaces\Connection as IDD;
 use PDO;
-use PDOStatement;
 
 /**
  * Class Connection
@@ -16,14 +15,13 @@ use PDOStatement;
 class Connection implements IDD
 {
 
-    protected string $db_username;
-    protected string $db_name;
-    protected string $db_password;
-    protected string $db_host;
-    public ?PDO $db_connection;
-    public PDOStatement $db_sql_statement;
-    public array $db_bindings = [];
-    //public $db_result;
+    protected $db_username;
+    protected $db_name;
+    protected $db_password;
+    protected $db_host;
+    public $db_connection;
+    public $db_sql_statement;
+    public $db_bindings = [];
 
     /**
      * Connection constructor.
@@ -105,8 +103,9 @@ class Connection implements IDD
     public function connect($exception = PDO::ERRMODE_EXCEPTION): Connection
     {
         $this->db_connection = $this->setDbConnection();
-        $this->db_connection?->setAttribute(PDO::ATTR_ERRMODE, $exception);
-
+        if ($this->db_connection !== null) {
+            $this->db_connection->setAttribute(PDO::ATTR_ERRMODE, $exception);
+        }
         return $this;
     }
 
