@@ -456,7 +456,7 @@ class Sql extends Parser implements ISql
         $type = "insert";
         if (isset($this->{$this->_id_dd_db})) {
             $type = "update";
-            $this->where($this->_id_dd_db, $this->{$this->_id_dd_db}, $eval = "=");
+            $this->where($this->_id_dd_db, $this->{$this->_id_dd_db});
         }
         $stmt = $this->makeStmt($type, []);
 
