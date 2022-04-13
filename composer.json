@@ -30,7 +30,9 @@
   "require": {
     "php": "^7.3|^7.4",
     "ext-json": "*",
-    "ext-pdo": "*",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
     "symfony/error-handler": "^5.4",
     "symfony/var-dumper": "^5.4",
     "vlucas/phpdotenv": "^5.4"
