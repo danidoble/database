@@ -173,10 +173,10 @@ class DBObject implements IDBObject
 
     /**
      * Force delete even if deleted_at exist
-     * @return $this|DBObject|DObject|Sql
+     * @return $this|DObject|Sql
      * @throws Exceptions\DatabaseException
      */
-    public function forceDelete(): static|DBObject|DObject|Sql
+    public function forceDelete(): static|DObject|Sql
     {
         $this->force_delete = true;
         return $this->delete();
@@ -184,10 +184,10 @@ class DBObject implements IDBObject
 
     /**
      * Only update if deleted_at exist, but if not exist is deleted
-     * @return $this|DBObject|DObject|Sql
+     * @return $this|DObject|Sql
      * @throws Exceptions\DatabaseException
      */
-    public function delete(): static|DBObject|DObject|Sql
+    public function delete(): static|DObject|Sql
     {
         $x = new Sql();
         $x->table($this->table);

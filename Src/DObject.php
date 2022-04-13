@@ -73,9 +73,9 @@ class DObject implements IDObject
 
     /**
      * @return $this
-     * @return DObject
+     * @return $this
      */
-    public function __invoke(): DObject
+    public function __invoke(): static
     {
         return $this;
     }

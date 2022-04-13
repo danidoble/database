@@ -13,37 +13,37 @@ interface Connection
 {
     /**
      * @param $db_host
-     * @return Connection
+     * @return $this
      */
-    public function setDbHost($db_host): Connection;
+    public function setDbHost($db_host): static;
 
     /**
      * @param $db_name
-     * @return Connection
+     * @return $this
      */
-    public function SetDbName($db_name): Connection;
+    public function SetDbName($db_name): static;
 
     /**
      * @param $db_username
-     * @return Connection
+     * @return $this
      */
-    public function SetDbUsername($db_username): Connection;
+    public function SetDbUsername($db_username): static;
 
     /**
      * @param $db_password
-     * @return Connection
+     * @return $this
      */
-    public function SetDbPassword($db_password): Connection;
+    public function SetDbPassword($db_password): static;
 
     /**
-     * @return Connection
+     * @return $this
      */
-    public function closeConnection(): Connection;
+    public function closeConnection(): static;
 
     /**
      * @param $exception
-     * @return Connection
+     * @return $this
      */
-    public function connect($exception): Connection;
+    public function connect($exception): static;
 
 }

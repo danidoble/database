@@ -23,7 +23,6 @@ class Connection implements IDD
     public ?PDO $db_connection;
     public PDOStatement $db_sql_statement;
     public array $db_bindings = [];
-    //public $db_result;
 
     /**
      * Connection constructor.
@@ -52,7 +51,7 @@ class Connection implements IDD
      * @param $db_username
      * @return $this
      */
-    public function setDbUsername($db_username): Connection
+    public function setDbUsername($db_username): static
     {
         $this->db_username = $db_username;
         return $this;
@@ -62,7 +61,7 @@ class Connection implements IDD
      * @param $db_name
      * @return $this
      */
-    public function setDbName($db_name): Connection
+    public function setDbName($db_name): static
     {
         $this->db_name = $db_name;
         return $this;
@@ -72,7 +71,7 @@ class Connection implements IDD
      * @param $db_password
      * @return $this
      */
-    public function setDbPassword($db_password): Connection
+    public function setDbPassword($db_password): static
     {
         $this->db_password = $db_password;
         return $this;
@@ -82,7 +81,7 @@ class Connection implements IDD
      * @param $db_host
      * @return $this
      */
-    public function setDbHost($db_host): Connection
+    public function setDbHost($db_host): static
     {
         $this->db_host = $db_host;
         return $this;
@@ -91,7 +90,7 @@ class Connection implements IDD
     /**
      * @return $this
      */
-    public function closeConnection(): Connection
+    public function closeConnection(): static
     {
         $this->db_connection = null;
         return $this;
@@ -102,7 +101,7 @@ class Connection implements IDD
      * @param int $exception
      * @return $this
      */
-    public function connect($exception = PDO::ERRMODE_EXCEPTION): Connection
+    public function connect($exception = PDO::ERRMODE_EXCEPTION): static
     {
         $this->db_connection = $this->setDbConnection();
         $this->db_connection?->setAttribute(PDO::ATTR_ERRMODE, $exception);

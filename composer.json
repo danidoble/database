@@ -1,7 +1,7 @@
 {
   "name": "danidoble/database",
   "description": "ORM mysql mariadb Database",
-  "version": "v0.0.2",
+  "version": "v1.0.1",
   "type": "library",
   "homepage": "https://github.com/danidoble/database",
   "license": "MIT",

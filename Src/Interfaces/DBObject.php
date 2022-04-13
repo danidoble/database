@@ -5,9 +5,8 @@
 
 namespace Danidoble\Database\Interfaces;
 
-use \Danidoble\Database\DBObject as CDBObject;
 use Danidoble\Database\DObject;
-use \Danidoble\Database\Sql as CSql;
+use Danidoble\Database\Sql as CSql;
 
 /**
  * Interface DBObject
@@ -21,7 +20,7 @@ interface DBObject
     public function __toString(): string;
 
     /**
-     * @return CDBObject
+     * @return $this
      */
     public function __invoke(): static;
 
@@ -66,19 +65,19 @@ interface DBObject
     public function setTable(string $name): void;
 
     /**
-     * @return CDBObject|CSql
+     * @return $this|CSql
      */
     public function save(): static|CSql;
 
     /**
-     * @return CDBObject|DObject|$this|CSql
+     * @return DObject|$this|CSql
      */
-    public function delete(): static|CDBObject|DObject|CSql;
+    public function delete(): static|DObject|CSql;
 
     /**
-     * @return CDBObject|DObject|CSql|$this
+     * @return $this|DObject|CSql
      */
-    public function forceDelete(): static|CDBObject|DObject|CSql;
+    public function forceDelete(): static|DObject|CSql;
 
     /**
      * @return DObject
@@ -89,6 +88,10 @@ interface DBObject
      * @param bool $val
      * @return $this
      */
-    public function debug(bool $val = true): CDBObject;
+    public function debug(bool $val = true): static;
 
+    /**
+     * @return DObject
+     */
+    public function getItems(): DObject;
 }

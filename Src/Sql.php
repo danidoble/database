@@ -76,10 +76,10 @@ class Sql extends Parser implements ISql
     /**
      * @param string $table
      * @param ?DatabaseCredentials $db_config
-     * @return Sql
+     * @return $this
      * @throws DatabaseCredentialsException|DatabaseException
      */
-    public static function from(string $table, ?DatabaseCredentials $db_config = null): Sql
+    public static function from(string $table, ?DatabaseCredentials $db_config = null): static
     {
         if ($db_config !== null) {
             return self::db($db_config)->table($table);
@@ -89,10 +89,10 @@ class Sql extends Parser implements ISql
 
     /**
      * @param $stmt
-     * @return Sql
+     * @return $this
      * @throws DatabaseException
      */
-    public function raw($stmt): Sql
+    public function raw($stmt): static
     {
         $this->executeStmt($stmt);
         return $this;
@@ -100,9 +100,9 @@ class Sql extends Parser implements ISql
 
     /**
      * @param $table
-     * @return Sql
+     * @return $this
      */
-    public function table($table): Sql
+    public function table($table): static
     {
         $this->table = $table;
         return $this;
@@ -111,9 +111,9 @@ class Sql extends Parser implements ISql
     /**
      * @param $field
      * @param string $order
-     * @return Sql
+     * @return $this
      */
-    public function orderBy($field, string $order = "asc"): Sql
+    public function orderBy($field, string $order = "asc"): static
     {
         $this->order_by[] = [
             $field,
@@ -126,7 +126,7 @@ class Sql extends Parser implements ISql
      * @param $field
      * @return $this
      */
-    public function groupBy($field): Sql
+    public function groupBy($field): static
     {
         $this->group_by[] = [
             $field,
@@ -139,9 +139,9 @@ class Sql extends Parser implements ISql
      * @param $value
      * @param string $eval
      * @param bool $bypass
-     * @return Sql
+     * @return $this
      */
-    public function where($field, $value, string $eval = "=", bool $bypass = false): Sql
+    public function where($field, $value, string $eval = "=", bool $bypass = false): static
     {
         if (!str_contains($field, '.')) {
             $field = $this->table . '.' . $field;
@@ -158,9 +158,9 @@ class Sql extends Parser implements ISql
 
     /**
      * @param $field
-     * @return Sql
+     * @return $this
      */
-    public function whereNotNull($field): Sql
+    public function whereNotNull($field): static
     {
         if (!str_contains($field, '.')) {
             $field = $this->table . '.' . $field;
@@ -177,9 +177,9 @@ class Sql extends Parser implements ISql
 
     /**
      * @param $field
-     * @return Sql
+     * @return $this
      */
-    public function whereNull($field): Sql
+    public function whereNull($field): static
     {
         if (!str_contains($field, '.')) {
             $field = $this->table . '.' . $field;
@@ -199,9 +199,9 @@ class Sql extends Parser implements ISql
      * @param $value
      * @param string $eval
      * @param bool $bypass
-     * @return Sql
+     * @return $this
      */
-    public function orWhere($field, $value, string $eval = "=", bool $bypass = false): Sql
+    public function orWhere($field, $value, string $eval = "=", bool $bypass = false): static
     {
         if (!str_contains($field, '.')) {
             $field = $this->table . '.' . $field;
@@ -218,9 +218,9 @@ class Sql extends Parser implements ISql
 
     /**
      * @param $field
-     * @return Sql
+     * @return $this
      */
-    public function orWhereNotNull($field): Sql
+    public function orWhereNotNull($field): static
     {
         if (!str_contains($field, '.')) {
             $field = $this->table . '.' . $field;
@@ -237,9 +237,9 @@ class Sql extends Parser implements ISql
 
     /**
      * @param $field
-     * @return Sql
+     * @return $this
      */
-    public function owWhereNull($field): Sql
+    public function owWhereNull($field): static
     {
         if (!str_contains($field, '.')) {
             $field = $this->table . '.' . $field;
@@ -256,10 +256,10 @@ class Sql extends Parser implements ISql
 
     /**
      * @param array $arr
-     * @return Sql|DObject|array|DBObject
+     * @return $this|DObject|array|DBObject
      * @throws DatabaseException
      */
-    public function first(array $arr = []): Sql|DObject|array|DBObject
+    public function first(array $arr = []): static|DObject|array|DBObject
     {
         $stmt = $this->makeStmt("select", $arr);
 
@@ -275,10 +275,10 @@ class Sql extends Parser implements ISql
     /**
      * @param string|int $id
      * @param array $arr
-     * @return Sql|DObject|array|DBObject
+     * @return $this|DObject|array|DBObject
      * @throws DatabaseException
      */
-    public function find(string|int $id, array $arr = []): Sql|DObject|array|DBObject
+    public function find(string|int $id, array $arr = []): static|DObject|array|DBObject
     {
         $this->where($this->_id_dd_db, $id);
         $stmt = $this->makeStmt("select", $arr);
@@ -296,10 +296,10 @@ class Sql extends Parser implements ISql
      * @param array $arr
      * @param ?int $limit
      * @param ?int $offset
-     * @return Sql|DObject|array
+     * @return $this|DObject|array
      * @throws DatabaseException
      */
-    public function get(array $arr = [], ?int $limit = null, ?int $offset = null): Sql|DObject|array
+    public function get(array $arr = [], ?int $limit = null, ?int $offset = null): static|DObject|array
     {
         $this->multiple_response = true;
         $stmt = $this->makeStmt("select", $arr);
@@ -326,7 +326,7 @@ class Sql extends Parser implements ISql
      * @return DObject|Sql|array
      * @throws DatabaseException
      */
-    public function count($id = null, string $name = "total"): Sql|DObject|array
+    public function count($id = null, string $name = "total"): static|DObject|array
     {
         $counter = $id !== null ? $id : "*";
         $stmt = $this->makeStmt("select", ["count($counter) as $name"]);
@@ -446,7 +446,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|Sql
      * @throws DatabaseException
      */
-    public function save(): array|bool|DBObject|DObject|Sql
+    public function save(): static|array|bool|DBObject|DObject
     {
         if ($this->this_use_joins) {
             $this->errors[] = "Multiples tables were set, you can only insert or update one table at time.";
@@ -456,7 +456,7 @@ class Sql extends Parser implements ISql
         $type = "insert";
         if (isset($this->{$this->_id_dd_db})) {
             $type = "update";
-            $this->where($this->_id_dd_db, $this->{$this->_id_dd_db}, $eval = "=");
+            $this->where($this->_id_dd_db, $this->{$this->_id_dd_db});
         }
         $stmt = $this->makeStmt($type, []);
 
@@ -490,7 +490,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|$this
      * @throws DatabaseException
      */
-    public function delete(): array|bool|DBObject|DObject|Sql
+    public function delete(): static|array|bool|DBObject|DObject
     {
         $this->response = false;
         if (!property_exists($this, 'deleted_at')) {
@@ -503,7 +503,7 @@ class Sql extends Parser implements ISql
      * @return array|bool|DBObject|DObject|$this
      * @throws DatabaseException
      */
-    public function forceDelete(): array|bool|DBObject|DObject|Sql
+    public function forceDelete(): static|array|bool|DBObject|DObject
     {
         $this->response = false;
         $this->where($this->_id_dd_db, $this->{$this->_id_dd_db});
@@ -700,10 +700,10 @@ class Sql extends Parser implements ISql
 
     /**
      * @param DatabaseCredentials $db_config
-     * @return Sql
+     * @return $this
      * @throws DatabaseCredentialsException|DatabaseException
      */
-    private static function db(DatabaseCredentials $db_config): Sql
+    private static function db(DatabaseCredentials $db_config): static
     {
         return (new Sql(null, $db_config));
     }

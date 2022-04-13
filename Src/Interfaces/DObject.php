@@ -22,9 +22,9 @@ interface DObject
     public function __toString(): string;
 
     /**
-     * @return DObject
+     * @return $this
      */
-    public function __invoke(): DObject;
+    public function __invoke(): static;
 
     /**
      * DObject constructor.
@@ -49,4 +49,39 @@ interface DObject
      * @return bool
      */
     public function __isset(string $name): bool;
+
+    /**
+     * @return string
+     */
+    public function save(): string;
+
+    /**
+     * @return string
+     */
+    public function find(): string;
+
+    /**
+     * @return string
+     */
+    public function first(): string;
+
+    /**
+     * @return string
+     */
+    public function update(): string;
+
+    /**
+     * @return string
+     */
+    public function delete(): string;
+
+    /**
+     * @return string
+     */
+    public function forceDelete(): string;
+
+    /**
+     * @return string
+     */
+    public function get(): string;
 }

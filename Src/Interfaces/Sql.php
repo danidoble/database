@@ -10,7 +10,6 @@ use Danidoble\Database\DObject;
 use Danidoble\Database\Exceptions\DatabaseCredentialsException;
 use Danidoble\Database\Exceptions\DatabaseException;
 use Danidoble\Database\DatabaseCredentials;
-use Danidoble\Database\Sql as CSql;
 
 /**
  * Interface Sql
@@ -26,47 +25,47 @@ interface Sql
     public function debug(bool $debug = false): static;
 
     /**
-     * @return array|bool|DBObject|DObject|CSql
+     * @return Sql|array|bool|DBObject|DObject
      * @throws DatabaseException
      */
-    public function save(): array|bool|DBObject|DObject|CSql;
+    public function save(): static|array|bool|DBObject|DObject;
 
     /**
      * @param $field
      * @param string $order
-     * @return CSql
+     * @return $this
      */
-    public function orderBy($field, string $order = "asc"): CSql;
+    public function orderBy($field, string $order = "asc"): static;
 
     /**
      * @param $field
-     * @return CSql
+     * @return $this
      */
-    public function groupBy($field): CSql;
+    public function groupBy($field): static;
 
     /**
      * @param array $arr
      * @param int $limit
      * @param int $offset
-     * @return CSql|DObject|array
+     * @return $this|DObject|array
      * @throws DatabaseException
      */
-    public function get(array $arr = [], int $limit = 0, int $offset = 0): CSql|DObject|array;
+    public function get(array $arr = [], int $limit = 0, int $offset = 0): static|DObject|array;
 
     /**
      * @param array $arr
-     * @return CSql|DObject|array|DBObject
+     * @return $this|DObject|array|DBObject
      * @throws DatabaseException
      */
-    public function first(array $arr = []): CSql|DObject|array|DBObject;
+    public function first(array $arr = []): static|DObject|array|DBObject;
 
     /**
      * @param string|int $id
      * @param array $arr
-     * @return CSql|DObject|array|DBObject
+     * @return $this|DObject|array|DBObject
      * @throws DatabaseException
      */
-    public function find(string|int $id, array $arr = []): CSql|DObject|array|DBObject;
+    public function find(string|int $id, array $arr = []): static|DObject|array|DBObject;
 
     /**
      * @param int $limit
@@ -82,36 +81,36 @@ interface Sql
      * @param $value
      * @param string $eval
      * @param bool $bypass
-     * @return CSql
+     * @return $this
      */
-    public function where($field, $value, string $eval = "=", bool $bypass = false): CSql;
+    public function where($field, $value, string $eval = "=", bool $bypass = false): static;
 
     /**
      * @param string $table
      * @param ?DatabaseCredentials $db_config
-     * @return CSql
+     * @return $this
      * @throws DatabaseException
      */
-    public static function from(string $table, ?DatabaseCredentials $db_config = null): CSql;
+    public static function from(string $table, ?DatabaseCredentials $db_config = null): static;
 
     /**
      * @param $table
-     * @return CSql
+     * @return $this
      */
-    public function table($table): CSql;
+    public function table($table): static;
 
     /**
      * @param $name
-     * @return CSql
+     * @return $this
      */
     public function id($name): static;
 
     /**
      * @param $stmt
-     * @return CSql
+     * @return $this
      * @throws DatabaseException
      */
-    public function raw($stmt): CSql;
+    public function raw($stmt): static;
 
     /**
      * @return DObject|array
@@ -126,10 +125,10 @@ interface Sql
     /**
      * @param $id
      * @param string $name
-     * @return DObject|CSql|array
+     * @return DObject|$this|array
      * @throws DatabaseException
      */
-    public function count($id = null, string $name = "total"): CSql|DObject|array;
+    public function count($id = null, string $name = "total"): static|DObject|array;
 
     /**
      * @param string $name
@@ -235,47 +234,47 @@ interface Sql
 
     /**
      * @param $field
-     * @return CSql
+     * @return $this
      */
-    public function whereNotNull($field): CSql;
+    public function whereNotNull($field): static;
 
     /**
      * @param $field
-     * @return CSql
+     * @return $this
      */
-    public function whereNull($field): CSql;
+    public function whereNull($field): static;
 
     /**
      * @param $field
      * @param $value
      * @param string $eval
      * @param bool $bypass
-     * @return CSql
+     * @return $this
      */
-    public function orWhere($field, $value, string $eval = "=", bool $bypass = false): CSql;
+    public function orWhere($field, $value, string $eval = "=", bool $bypass = false): static;
 
     /**
      * @param $field
-     * @return CSql
+     * @return $this
      */
-    public function orWhereNotNull($field): CSql;
+    public function orWhereNotNull($field): static;
 
     /**
      * @param $field
-     * @return CSql
+     * @return $this
      */
-    public function owWhereNull($field): CSql;
+    public function owWhereNull($field): static;
 
 
     /**
-     * @return array|bool|DBObject|DObject|CSql
+     * @return array|bool|DBObject|DObject|$this
      * @throws DatabaseException
      */
-    public function delete(): array|bool|DBObject|DObject|CSql;
+    public function delete(): static|array|bool|DBObject|DObject;
 
     /**
-     * @return array|bool|DBObject|DObject|CSql
+     * @return Sql|array|bool|DBObject|DObject
      * @throws DatabaseException
      */
-    public function forceDelete(): array|bool|DBObject|DObject|CSql;
+    public function forceDelete(): static|array|bool|DBObject|DObject;
 }
