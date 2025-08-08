@@ -6,7 +6,6 @@
 namespace Danidoble\Database;
 
 use Danidoble\Database\Interfaces\DObject as IDObject;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Class DObject
@@ -104,7 +103,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function save(): string
+    public function save(): string
     {
         return $this->incorrectClass();
     }
@@ -112,7 +111,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function find(): string
+    public function find(): string
     {
         return $this->incorrectClass();
     }
@@ -120,7 +119,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function first(): string
+    public function first(): string
     {
         return $this->incorrectClass();
     }
@@ -128,7 +127,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function update(): string
+    public function update(): string
     {
         return $this->incorrectClass();
     }
@@ -136,7 +135,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function delete(): string
+    public function delete(): string
     {
         return $this->incorrectClass();
     }
@@ -144,7 +143,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function forceDelete(): string
+    public function forceDelete(): string
     {
         return $this->incorrectClass();
     }
@@ -152,7 +151,7 @@ class DObject implements IDObject
     /**
      * @return string
      */
-    #[Pure] public function get(): string
+    public function get(): string
     {
         return $this->incorrectClass();
     }

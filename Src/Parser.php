@@ -6,7 +6,6 @@
 namespace Danidoble\Database;
 
 use Danidoble\Database\Exceptions\DatabaseException;
-use JetBrains\PhpStorm\Pure;
 
 
 class Parser
@@ -201,7 +200,7 @@ class Parser
      * @param $arr
      * @return string
      */
-    #[Pure] protected function makeStmtSelect($arr): string
+    protected function makeStmtSelect($arr): string
     {
         //select
         if ((!empty($this->inner_join) || !empty($this->left_join) || !empty($this->right_join) || !empty($this->cross_join)) && empty($arr)) {
